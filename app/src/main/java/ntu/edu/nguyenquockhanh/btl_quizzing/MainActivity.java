@@ -19,18 +19,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TimDK();
-        btn_chonchude.setOnClickListener(ChuyenMH);
+        btn_choi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iMH = new Intent(MainActivity.this, ManHinhChoi.class);
+                startActivity(iMH);
+            }
+        });
+        btn_chonchude.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iMH = new Intent(MainActivity.this, ChonChuDe.class);
+                startActivity(iMH);
+            }
+        });
     }
     void TimDK()
     {
         btn_choi = findViewById(R.id.btn_choi);
         btn_chonchude = findViewById(R.id.btn_chonchude);
     }
-    View.OnClickListener ChuyenMH = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent iMH = new Intent(MainActivity.this, ChonChuDe.class);
-            startActivity(iMH);
-        }
-    };
 }

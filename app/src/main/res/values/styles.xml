@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MyButtonPrimary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/blue</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">20dp</item>
+    </style>
+    <style name="MyButton" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/blur</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">20dp</item>
+    </style>
+</resources>

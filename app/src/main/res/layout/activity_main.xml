@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="152dp"
+        android:fontFamily="@font/plus_jakarta_sans_extrabold"
+        android:text="QuizZing"
+        android:textColor="@color/white"
+        android:textSize="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:background="@drawable/bg_high_score"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Anh Pa Na Dol"
+            android:textAlignment="center"
+            android:fontFamily="@font/plus_jakarta_sans_extrabold"
+            android:textColor="#fff"
+            android:layout_marginBottom="10dp"
+            android:textSize="22dp">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_best_score_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🏆 Điểm Cao Nhất"
+            android:fontFamily="@font/plus_jakarta_sans"
+            android:textAlignment="center"
+            android:textColor="#B1ABAB"
+            android:textSize="17dp"/>
+
+        <TextView
+            android:id="@+id/tv_best_score_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/plus_jakarta_sans_extrabold"
+            android:text="12,500"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="45dp"/>
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_choi"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:paddingTop="20dp"
+        style="@style/MyButtonPrimary"
+        android:paddingBottom="20dp"
+        android:text="Chơi"
+        android:textSize="25dp"
+        app:icon="@drawable/ic_play"
+        app:iconGravity="textStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+    </com.google.android.material.button.MaterialButton>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_chonchude"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        style="@style/MyButton"
+        android:text="Chơi theo chủ đề"
+        app:icon="@drawable/ic_menu"
+        app:iconGravity="textStart"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_choi">
+    </com.google.android.material.button.MaterialButton>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

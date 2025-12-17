@@ -1,6 +1,8 @@
 package ntu.edu.nguyenquockhanh.btl_quizzing;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +13,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +24,7 @@ import ntu.edu.nguyenquockhanh.btl_quizzing.model.Category;
 
 public class ChonChuDe extends AppCompatActivity {
     RecyclerView recyclerView;
+    MaterialButton btnBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,39 +32,33 @@ public class ChonChuDe extends AppCompatActivity {
         DatabaseHelper db = new DatabaseHelper(this);
         db.insertDefaultCategories();
 
-        recyclerView = findViewById(R.id.recyclerView);
+        TimDK();
+
+        btnBack.setOnClickListener(ChuyenMH);
+
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
 
-        List<Category> categories = new ArrayList<>();
-        Category vpop = new Category(0, "V-Pop", R.drawable.ic_vpop,
-                ContextCompat.getColor(this, R.color.vpop_start),
-                ContextCompat.getColor(this, R.color.vpop_end));
-        Category kpop = new Category(0, "K-Pop", R.drawable.ic_kpop,
-                ContextCompat.getColor(this, R.color.kpop_start),
-                ContextCompat.getColor(this, R.color.kpop_end));
-        Category usuk = new Category(0, "US-UK", R.drawable.ic_usuk,
-                ContextCompat.getColor(this, R.color.usuk_start),
-                ContextCompat.getColor(this, R.color.usuk_end));
-        Category rap = new Category(0, "Rap/HipHop", R.drawable.ic_rap,
-                ContextCompat.getColor(this, R.color.rap_start),
-                ContextCompat.getColor(this, R.color.rap_end));
-        Category ballad = new Category(0, "K-Pop", R.drawable.ic_ballad,
-                ContextCompat.getColor(this, R.color.ballad_start),
-                ContextCompat.getColor(this, R.color.ballad_end));
-        Category indie = new Category(0, "K-Pop", R.drawable.ic_indie,
-                ContextCompat.getColor(this, R.color.indie_start),
-                ContextCompat.getColor(this, R.color.indie_end));
-        categories.add(vpop);
-        categories.add(kpop);
-        categories.add(usuk);
-        categories.add(rap);
-        categories.add(ballad);
-        categories.add(indie);
+        List<Category> categories = db.getAllCategories(this);
+
 
         CategoryAdapter adapter = new CategoryAdapter(categories, this);
         recyclerView.setAdapter(adapter);
 
     }
+    void TimDK()
+    {
+        recyclerView = findViewById(R.id.recyclerView);
+        btnBack = findViewById(R.id.btn_back);
+    }
+
+    View.OnClickListener ChuyenMH = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent iMH = new Intent(ChonChuDe.this, MainActivity.class);
+            startActivity(iMH);
+            overridePendingTransition(R.anim.slide_in_from_left, android.R.anim.slide_out_right);
+        }
+    };
 }

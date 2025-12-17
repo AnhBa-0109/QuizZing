@@ -8,20 +8,18 @@
     android:background="@mipmap/background"
     tools:context=".MainActivity">
 
+
     <TextView
         android:id="@+id/tv_title"
+        style="@style/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="152dp"
-        android:fontFamily="@font/plus_jakarta_sans_extrabold"
         android:text="QuizZing"
-        android:textColor="@color/white"
-        android:textSize="64dp"
+        android:textSize="66dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -41,8 +39,7 @@
             android:layout_height="wrap_content"
             android:text="Anh Pa Na Dol"
             android:textAlignment="center"
-            android:fontFamily="@font/plus_jakarta_sans_extrabold"
-            android:textColor="#fff"
+            style="@style/Title"
             android:layout_marginBottom="10dp"
             android:textSize="22dp">
         </TextView>
@@ -77,9 +74,9 @@
         style="@style/MyButtonPrimary"
         android:paddingBottom="20dp"
         android:text="Chơi"
-        android:textSize="25dp"
         app:icon="@drawable/ic_play"
         app:iconGravity="textStart"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,13 +88,10 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
         style="@style/MyButton"
         android:text="Chơi theo chủ đề"
         app:icon="@drawable/ic_menu"
         app:iconGravity="textStart"
-        android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"

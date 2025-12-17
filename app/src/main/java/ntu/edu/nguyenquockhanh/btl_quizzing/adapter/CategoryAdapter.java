@@ -6,11 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -31,7 +30,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         // Tạo gradient background
         GradientDrawable gradient = new GradientDrawable(
-                GradientDrawable.Orientation.LEFT_RIGHT,
+                GradientDrawable.Orientation.TOP_BOTTOM,
                 new int[]{c.getStartColor(), c.getEndColor()}
         );
         gradient.setCornerRadius(20f);
@@ -58,7 +57,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     static class CategoryViewHolder extends RecyclerView.ViewHolder {
         ImageView imgIcon;
         TextView tvName;
-        LinearLayout container;
+        ConstraintLayout container;
 
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);

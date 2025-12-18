@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BTL_QuizZing">
         <activity
+            android:name=".ManHinhKetQua"
+            android:exported="false" />
+        <activity
             android:name=".ManHinhChoi"
             android:exported="false" />
         <activity

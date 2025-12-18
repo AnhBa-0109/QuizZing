@@ -1,0 +1,30 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ===== VÒNG NGOÀI (gradient mờ – TopRight -> BottomLeft) ===== -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="#336C5825"
+                android:endColor="#6675492A"/>
+        </shape>
+    </item>
+
+    <!-- ===== VÒNG TRONG (gradient chính – TopRight -> BottomLeft) ===== -->
+    <item
+        android:width="120dp"
+        android:height="120dp"
+        android:gravity="center">
+
+        <shape android:shape="oval">
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="#6C5825"
+                android:endColor="#75492A"/>
+        </shape>
+
+    </item>
+
+</layer-list>

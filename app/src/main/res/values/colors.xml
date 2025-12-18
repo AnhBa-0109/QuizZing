@@ -3,23 +3,23 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#2B2BEE</color>
-    <color name="blur">#1AFFFFFF</color>
+    <color name="blur">#1C2028</color>
 
-    <color name="vpop_start">#4E265E</color>
-    <color name="vpop_end">#37204F</color>
+    <color name="vpop_start">#4D265C</color>
+    <color name="vpop_end">#371F4F</color>
 
-    <color name="kpop_start">#1E3A6B</color>
-    <color name="kpop_end">#172F52</color>
+    <color name="kpop_start">#1C396A</color>
+    <color name="kpop_end">#183053</color>
 
-    <color name="rap_start">#533727</color>
-    <color name="rap_end">#3C2D21</color>
+    <color name="rap_start">#471A2B</color>
+    <color name="rap_end">#341926</color>
 
-    <color name="usuk_start">#471C2C</color>
-    <color name="usuk_end">#471C2C</color>
+    <color name="usuk_start">#523525</color>
+    <color name="usuk_end">#3C2D21</color>
 
-    <color name="indie_start">#104140</color>
+    <color name="indie_start">#104240</color>
     <color name="indie_end">#0C2F34</color>
 
-    <color name="ballad_start">#32265F</color>
-    <color name="ballad_end">#221D4A</color>
+    <color name="ballad_start">#32265E</color>
+    <color name="ballad_end">#221E4A</color>
 </resources>

@@ -90,6 +90,7 @@
         android:layout_marginTop="8dp"
         style="@style/MyButton"
         android:text="Chơi theo chủ đề"
+        android:textSize="20dp"
         app:icon="@drawable/ic_menu"
         app:iconGravity="textStart"
         app:layout_constraintEnd_toEndOf="parent"

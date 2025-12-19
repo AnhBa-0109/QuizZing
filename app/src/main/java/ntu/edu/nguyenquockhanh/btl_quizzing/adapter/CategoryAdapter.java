@@ -18,6 +18,7 @@ import java.util.List;
 import ntu.edu.nguyenquockhanh.btl_quizzing.ManHinhMoTa;
 import ntu.edu.nguyenquockhanh.btl_quizzing.R;
 import ntu.edu.nguyenquockhanh.btl_quizzing.model.Category;
+import ntu.edu.nguyenquockhanh.btl_quizzing.model.GameMode;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
     private List<Category> categoryList;
@@ -43,8 +44,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             Intent intent = new Intent(context, ManHinhMoTa.class);
 
             //gửi dữ liệu
+            intent.putExtra("Game_Mode", GameMode.BY_CATEGORY);
             intent.putExtra("category_id", c.getId());
-            intent.putExtra("category_name", c.getName());
+
 
             context.startActivity(intent);
         });

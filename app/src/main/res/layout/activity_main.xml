@@ -35,6 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_title">
 
         <TextView
+            android:id="@+id/tv_nameMHC"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Anh Pa Na Dol"

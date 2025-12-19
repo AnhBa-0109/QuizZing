@@ -34,21 +34,22 @@
         </com.google.android.material.button.MaterialButton>
 
         <TextView
+            android:id="@+id/Cau"
             style="@style/Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Câu 1/10"
             android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textView"
+            app:layout_constraintEnd_toStartOf="@+id/tv_diem"
             app:layout_constraintHorizontal_bias="0.513"
-            app:layout_constraintStart_toEndOf="@+id/btn_back"
+            app:layout_constraintStart_toEndOf="@+id/btn_backChoi"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.636">
         </TextView>
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_diem"
             style="@style/Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,6 +74,7 @@
         android:paddingBottom="20dp"
         app:layout_constraintTop_toBottomOf="@+id/constraint">
         <TextView
+            android:id="@+id/tv_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="0:20"
@@ -82,6 +84,7 @@
             android:padding="0dp">
         </TextView>
         <ProgressBar
+            android:id="@+id/progress"
             android:layout_width="match_parent"
             android:layout_height="6dp"
             style="?android:attr/progressBarStyleHorizontal"
@@ -102,6 +105,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar">
         <TextView
+            android:id="@+id/tv_CauHoi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
@@ -128,8 +132,8 @@
                     android:scaleType="centerCrop"
                     app:srcCompat="@mipmap/logo"
                     app:shapeAppearanceOverlay="@style/RoundedImage"/>
-
                 <TextView
+                    android:id="@+id/state_phatnhac"
                     style="@style/Title"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -139,8 +143,8 @@
                     android:text="Đang phát đoạn nhạc..."
                     android:textSize="15dp">
                 </TextView>
-
                 <ImageButton
+                    android:id="@+id/ib_playpause"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:background="@drawable/circle_button"

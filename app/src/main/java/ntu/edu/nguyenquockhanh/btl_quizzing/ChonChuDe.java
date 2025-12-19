@@ -21,6 +21,7 @@ import java.util.List;
 import ntu.edu.nguyenquockhanh.btl_quizzing.adapter.CategoryAdapter;
 import ntu.edu.nguyenquockhanh.btl_quizzing.database.DatabaseHelper;
 import ntu.edu.nguyenquockhanh.btl_quizzing.model.Category;
+import ntu.edu.nguyenquockhanh.btl_quizzing.model.GameMode;
 
 public class ChonChuDe extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -30,7 +31,6 @@ public class ChonChuDe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chon_chu_de);
         DatabaseHelper db = new DatabaseHelper(this);
-        db.insertDefaultCategories();
 
         TimDK();
 

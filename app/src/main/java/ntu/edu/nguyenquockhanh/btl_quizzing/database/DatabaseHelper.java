@@ -15,10 +15,12 @@ import java.util.List;
 
 import ntu.edu.nguyenquockhanh.btl_quizzing.R;
 import ntu.edu.nguyenquockhanh.btl_quizzing.model.Category;
+import ntu.edu.nguyenquockhanh.btl_quizzing.model.Question;
+import ntu.edu.nguyenquockhanh.btl_quizzing.model.Score;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "sql_android.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 4;
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -27,18 +29,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Tạo bảng
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        //tạo bảng Category
         db.execSQL("CREATE TABLE Category("
                 + "category_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "category_name TEXT NOT NULL)");
+
+        //tạo bảng Question
+        db.execSQL("CREATE TABLE Question (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "question_text TEXT," +
+                "answer1 TEXT," +
+                "answer2 TEXT," +
+                "answer3 TEXT," +
+                "answer4 TEXT," +
+                "correct_answer TEXT," +
+                "audio_file TEXT)");
+
+        //tạo bảng Score
+        db.execSQL("CREATE TABLE Score (" +
+                "id INTEGER PRIMARY KEY," +
+                "username TEXT," +
+                "score INTEGER)");
+
+        //tạo bảng Question_Category
+        db.execSQL("CREATE TABLE Question_Category (" +
+                "question_id, INTEGER" +
+                "category_id INTEGER," +
+                "PRIMARY KEY (question_id, category_id)," +
+                "FOREIGN KEY (question_id) REFERENCES Question(id)," +
+                "FOREIGN KEY (category_id) REFERENCES Category(category_id))");
+
     }
 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS Category");
+        db.execSQL("DROP TABLE IF EXISTS Question");
+        db.execSQL("DROP TABLE IF EXISTS Score");
         onCreate(db);
     }
 
+
+    //Bảng Category
     //Thêm chủ đề
     public void addCategory(String name) {
         //Mở cửa Taxi
@@ -50,25 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert("Category", null, values);
     }
 
-    //Thêm chủ đề mẫu
-    public void insertDefaultCategories() {
-        //Mở database
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        //Dùng con trỏ trỏ đến kết quả query
-        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM Category", null);
-        //Kiểm tra điều kiện nếu bảng Category rỗng thì mới add dữ liệu mẫu.
-        if (cursor.moveToFirst() && cursor.getInt(0) == 0) {
-            addCategory("V-Pop");
-            addCategory("K-Pop");
-            addCategory("Rap/HipHop");
-            addCategory("US-UK");
-            addCategory("Indie");
-            addCategory("Ballad");
-        }
-        cursor.close();
-    }
-
+    //Link icon và background đến từng chủ đề
     private void mapUIForCategory(Category c, Context context) {
         switch (c.getName()) {
             case "V-Pop":
@@ -104,7 +120,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 break;
         }
     }
-
     public List<Category> getAllCategories(Context context) {
         List<Category> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -126,4 +141,108 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return list;
     }
+
+
+    //Bảng Score
+    //Thêm dữ liệu mẫu
+    public Score getScore() {
+        SQLiteDatabase db = getReadableDatabase();
+        Score score = null;
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM Score WHERE id = 1",
+                null
+        );
+
+        if (cursor.moveToFirst()) {
+            score = new Score(
+                    cursor.getInt(0),
+                    cursor.getString(1),
+                    cursor.getInt(2)
+            );
+        }
+
+        cursor.close();
+        return score;
+    }
+    public void updateHighScoreIfNeeded(int newScore) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        Score currentScore = getScore();
+        //Kiểm tra nếu người chơi chưa có điểm thì sẽ cập nhật luôn
+        if(currentScore == null) {
+            ContentValues cv = new ContentValues();
+            cv.put("id",1);
+            cv.put("username", "Anh Ba");
+            cv.put("score", newScore);
+            db.insert("Score",null,cv);
+            return;
+        }
+
+        if (newScore > currentScore.getScore()) {
+            ContentValues cv = new ContentValues();
+            cv.put("score", newScore);
+
+            db.update("Score", cv, "id = ?", new String[]{"1"});
+        }
+    }
+
+
+
+    //Bảng Question
+
+    //Lấy ngẫu nhiên câu hỏi
+    public List<Question> getRandomQuestions(int limit) {
+        List<Question> questions = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Question ORDER BY RANDOM() LIMIT 10", null);
+
+        while(cursor.moveToNext()) {
+            Question question = new Question();
+            question.id = cursor.getInt(0);
+            question.questionText = cursor.getString(1);
+            question.answer1 = cursor.getString(2);
+            question.answer2 = cursor.getString(3);
+            question.answer3 = cursor.getString(4);
+            question.answer4 = cursor.getString(5);
+            question.correctAnswer = cursor.getString(6);
+            question.audioFile = cursor.getString(7);
+            questions.add(question);
+        }
+        cursor.close();
+        return questions;
+    }
+
+    //Lấy ngẫu nhiên câu hỏi theo chủ đề
+    public List<Question> getRandomQuestionsByCategory(int categoryId, int limit) {
+        List<Question> questions = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT q.* FROM Question q " +
+                        "JOIN Question_Category qc ON q.id = qc.question_id " +
+                        "WHERE qc.category_id = ? " +
+                        "ORDER BY RANDOM() LIMIT 10",
+                new String[]{String.valueOf(categoryId), String.valueOf(limit)}
+        );
+
+        while(cursor.moveToNext()) {
+            Question question = new Question();
+            question.id = cursor.getInt(0);
+            question.questionText = cursor.getString(1);
+            question.answer1 = cursor.getString(2);
+            question.answer2 = cursor.getString(3);
+            question.answer3 = cursor.getString(4);
+            question.answer4 = cursor.getString(5);
+            question.correctAnswer = cursor.getString(6);
+            question.audioFile = cursor.getString(7);
+            questions.add(question);
+        }
+
+        cursor.close();
+        return questions;
+    }
+
+
+
 }

@@ -1,27 +1,26 @@
 package ntu.edu.nguyenquockhanh.btl_quizzing.model;
 
 public class Score {
-    String name;
+    int id;
+    String username;
     int score;
 
-    public Score(String name, int score) {
-        this.name = name;
+    public Score(int id, String name, int score) {
+        this.id = id;
+        this.username = name;
         this.score = score;
     }
 
-    public String getName() {
-        return name;
+    public int getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+
+    public String getUsername() {
+        return username;
     }
 
     public int getScore() {
         return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 }

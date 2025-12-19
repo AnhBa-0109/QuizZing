@@ -31,6 +31,7 @@ public class ChonChuDe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chon_chu_de);
         DatabaseHelper db = new DatabaseHelper(this);
+        db.insertDefaultCategories();
 
         TimDK();
 

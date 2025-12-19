@@ -20,7 +20,7 @@ import ntu.edu.nguyenquockhanh.btl_quizzing.model.Score;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "sql_android.db";
-    private static final int DB_VERSION = 4;
+    private static final int DB_VERSION = 6;
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -54,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //tạo bảng Question_Category
         db.execSQL("CREATE TABLE Question_Category (" +
-                "question_id, INTEGER" +
+                "question_id INTEGER," +
                 "category_id INTEGER," +
                 "PRIMARY KEY (question_id, category_id)," +
                 "FOREIGN KEY (question_id) REFERENCES Question(id)," +
@@ -68,11 +68,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS Category");
         db.execSQL("DROP TABLE IF EXISTS Question");
         db.execSQL("DROP TABLE IF EXISTS Score");
+        db.execSQL("DROP TABLE IF EXISTS Question_Category");
         onCreate(db);
     }
 
 
     //Bảng Category
+    //Thêm chủ đề mẫu
+    public void insertDefaultCategories() {
+        //Mở database
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Dùng con trỏ trỏ đến kết quả query
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM Category", null);
+        //Kiểm tra điều kiện nếu bảng Category rỗng thì mới add dữ liệu mẫu.
+        if (cursor.moveToFirst() && cursor.getInt(0) == 0) {
+            addCategory("V-Pop");
+            addCategory("K-Pop");
+            addCategory("Rap/HipHop");
+            addCategory("US-UK");
+            addCategory("Indie");
+            addCategory("Ballad");
+        }
+        cursor.close();
+    }
     //Thêm chủ đề
     public void addCategory(String name) {
         //Mở cửa Taxi
@@ -144,7 +163,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     //Bảng Score
-    //Thêm dữ liệu mẫu
+    //Lấy điểm của người chơi
     public Score getScore() {
         SQLiteDatabase db = getReadableDatabase();
         Score score = null;
@@ -165,6 +184,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return score;
     }
+    //Cập nhận điểm của người chơi
     public void updateHighScoreIfNeeded(int newScore) {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -190,9 +210,84 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     //Bảng Question
+    private void insertQuestion(String q, String a1, String a2,
+                                String a3, String a4,
+                                String correct, String audio) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("question_text", q);
+        cv.put("answer1", a1);
+        cv.put("answer2", a2);
+        cv.put("answer3", a3);
+        cv.put("answer4", a4);
+        cv.put("correct_answer", correct);
+        cv.put("audio_file", audio);
+        db.insert("Question", null, cv);
+    }
+    public void insertDefaultQuestions() {
+        SQLiteDatabase db = getWritableDatabase();
 
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM Question", null);
+        if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
+            cursor.close();
+            return;
+        }
+        cursor.close();
+
+        insertQuestion(
+                "Bài hát nào của Sơn Tùng M-TP?",
+                "Lạc Trôi",
+                "Sau Tất Cả",
+                "Hồng Nhan",
+                "Anh Đã Quen Với Cô Đơn",
+                "Lạc Trôi",
+                ""
+        );
+
+        insertQuestion(
+                "Bài hát nào của BTS?",
+                "Dynamite",
+                "Boy With Luv",
+                "See Tình",
+                "Em Của Ngày Hôm Qua",
+                "Dynamite",
+                ""
+        );
+        insertQuestion(
+                "Ca sĩ nào nổi tiếng với bài hát “Shape of You”?",
+                "Justin Bieber",
+                "Charlie Puth",
+                "Ed Sheeran",
+                "Shawn Mendes",
+                "Ed Sheeran",
+                ""
+        );
+        insertQuestion(
+                "Rapper nào gắn liền với bài hát “Rap God”?",
+                "Drake",
+                "Kanye West",
+                "Jay-Z",
+                "Eminem",
+                "Eminem",
+                ""
+        );
+        insertQuestion(
+                "Bài hát “Có Chắc Yêu Là Đây” thuộc thể loại nào?",
+                "Rap",
+                "Indie",
+                "EDM",
+                "Ballad",
+                "Ballad",
+                ""
+        );
+        linkQuestionCategory(1, 1);
+        linkQuestionCategory(2, 2);
+        linkQuestionCategory(3, 3);
+        linkQuestionCategory(4, 4);
+        linkQuestionCategory(5, 5);
+    }
     //Lấy ngẫu nhiên câu hỏi
-    public List<Question> getRandomQuestions(int limit) {
+    public List<Question> getRandomQuestions() {
         List<Question> questions = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM Question ORDER BY RANDOM() LIMIT 10", null);
@@ -214,7 +309,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Lấy ngẫu nhiên câu hỏi theo chủ đề
-    public List<Question> getRandomQuestionsByCategory(int categoryId, int limit) {
+    public List<Question> getRandomQuestionsByCategory(int categoryId) {
         List<Question> questions = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
 
@@ -223,7 +318,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         "JOIN Question_Category qc ON q.id = qc.question_id " +
                         "WHERE qc.category_id = ? " +
                         "ORDER BY RANDOM() LIMIT 10",
-                new String[]{String.valueOf(categoryId), String.valueOf(limit)}
+                new String[]{String.valueOf(categoryId)}
         );
 
         while(cursor.moveToNext()) {
@@ -243,6 +338,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return questions;
     }
 
+
+    //Bảng Question_Category
+    public void linkQuestionCategory(int questionId, int categoryId) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("question_id", questionId);
+        cv.put("category_id", categoryId);
+        db.insert("Question_Category", null, cv);
+    }
 
 
 }

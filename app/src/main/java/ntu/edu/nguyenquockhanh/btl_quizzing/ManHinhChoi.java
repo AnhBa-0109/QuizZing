@@ -2,6 +2,7 @@
 
     import android.app.Dialog;
     import android.content.Intent;
+    import android.content.res.ColorStateList;
     import android.graphics.Color;
     import android.graphics.drawable.ColorDrawable;
     import android.media.MediaPlayer;
@@ -14,10 +15,12 @@
     import android.widget.ImageButton;
     import android.widget.ProgressBar;
     import android.widget.TextView;
+    import android.widget.Toast;
 
     import androidx.activity.EdgeToEdge;
     import androidx.activity.OnBackPressedCallback;
     import androidx.appcompat.app.AppCompatActivity;
+    import androidx.core.content.ContextCompat;
     import androidx.core.graphics.Insets;
     import androidx.core.view.ViewCompat;
     import androidx.core.view.WindowInsetsCompat;
@@ -45,15 +48,16 @@
         MediaPlayer mediaPlayer;
 
         DatabaseHelper db;
-
-        int mode = getIntent().getIntExtra("Game_Mode", GameMode.RANDOM);
-
+        boolean isPlaying = false;
+        int mode;
+        int categoryId = -1;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_man_hinh_choi);
             TimDK();
-
+            score = 0;
+            tv_diem.setText("0");
             btn_back.setOnClickListener(v -> showExitDialog());
             getOnBackPressedDispatcher().addCallback(
                     this,
@@ -64,10 +68,32 @@
                         }
                     }
             );
+            ib_playpause.setOnClickListener(v -> {
+                if (isPlaying) {
+                    stopAudio();
+                } else {
+                    playAudio();
+                }
+            });
 
+            mode = getIntent().getIntExtra("Game_Mode", GameMode.RANDOM);
+            if(mode == GameMode.BY_CATEGORY) categoryId = getIntent().getIntExtra("category_id", -1);
             db = new DatabaseHelper(this);
-            dsCauHoi = db.getALlQuestion();
-            Collections.shuffle(dsCauHoi);
+            db.insertDefaultCategories();
+            db.insertDefaultQuestions();
+
+            loadQuestionsByMode();
+
+            if (dsCauHoi == null || dsCauHoi.size() == 0) {
+                Toast.makeText(this, "Không có câu hỏi!", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+
+            btn_da1.setOnClickListener(answerClick);
+            btn_da2.setOnClickListener(answerClick);
+            btn_da3.setOnClickListener(answerClick);
+            btn_da4.setOnClickListener(answerClick);
 
             loadQuestion();
             startTimer();
@@ -100,8 +126,16 @@
             btn_da3.setText(q.answer3);
             btn_da4.setText(q.answer4);
 
-            tv_statePhatNhac.setText("Click vào nút Play để phát");
+            tv_statePhatNhac.setText("Click nút Play để phát");
         }
+        private void loadQuestionsByMode() {
+            if (mode == GameMode.BY_CATEGORY) {
+                dsCauHoi = db.getRandomQuestionsByCategory(categoryId);
+            } else {
+                dsCauHoi = db.getRandomQuestions();
+            }
+        }
+
         private void startTimer() {
             progressBar.setMax(20);
             timer = new CountDownTimer(20000, 1000) {
@@ -112,9 +146,19 @@
                 }
 
                 public void onFinish() {
-                    nextQuestion();
+                    highlightCorrectAnswer();
+                    disableAnswerButtons();
+
+                    new Handler(Looper.getMainLooper())
+                            .postDelayed(() -> nextQuestion(), 800);
                 }
             }.start();
+        }
+        private void disableAnswerButtons() {
+            btn_da1.setEnabled(false);
+            btn_da2.setEnabled(false);
+            btn_da3.setEnabled(false);
+            btn_da4.setEnabled(false);
         }
         View.OnClickListener answerClick = v -> {
             timer.cancel();
@@ -122,35 +166,82 @@
 
             if (b.getText().toString().equals(
                     dsCauHoi.get(currentQuestion).correctAnswer)) {
-                b.setBackgroundColor(Color.GREEN);
+                b.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                 score += 100;
                 tv_diem.setText(String.valueOf(score));
             } else {
-                b.setBackgroundColor(Color.RED);
+                b.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
             }
+            disableAnswerButtons();
 
             new Handler().postDelayed(this::nextQuestion, 800);
         };
+
+
+        private void stopAudio() {
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
+            isPlaying = false;
+            ib_playpause.setImageResource(R.drawable.ic_play);
+            tv_statePhatNhac.setText("Click nút Play để phát");
+        }
         private void playAudio() {
-            if (mediaPlayer != null) mediaPlayer.release();
-            tv_statePhatNhac.setText("Đang phát đoạn nhạc...");
+            stopAudio();
+
+            String audioName = dsCauHoi.get(currentQuestion).audioFile;
+            if (audioName == null) return;
+
             mediaPlayer = MediaPlayer.create(this,
-                    getResources().getIdentifier(
-                            dsCauHoi.get(currentQuestion).audioFile,
-                            "raw",
-                            getPackageName()));
+                    getResources().getIdentifier(audioName, "raw", getPackageName()));
             mediaPlayer.start();
+
+            isPlaying = true;
+            ib_playpause.setImageResource(R.drawable.ic_pause);
+            tv_statePhatNhac.setText("Đang phát đoạn nhạc...");
+        }
+        private void resetAnswerUI() {
+            ColorStateList defaultTint =
+                    ContextCompat.getColorStateList(this, R.color.grey_black);
+
+            btn_da1.setBackgroundTintList(defaultTint);
+            btn_da2.setBackgroundTintList(defaultTint);
+            btn_da3.setBackgroundTintList(defaultTint);
+            btn_da4.setBackgroundTintList(defaultTint);
+
+            btn_da1.setEnabled(true);
+            btn_da2.setEnabled(true);
+            btn_da3.setEnabled(true);
+            btn_da4.setEnabled(true);
         }
         private void nextQuestion() {
+            stopAudio();
+
             currentQuestion++;
-            if (currentQuestion == 10) {
+            if (currentQuestion >= dsCauHoi.size()) {
                 db.updateHighScoreIfNeeded(score);
-                finish();
+                Intent iChuyen = new Intent(ManHinhChoi.this, ManHinhKetQua.class);
+                startActivity(iChuyen);
                 return;
             }
+
+            resetAnswerUI();
             loadQuestion();
             startTimer();
         }
+        private void highlightCorrectAnswer() {
+            String correct = dsCauHoi.get(currentQuestion).correctAnswer;
+
+            for (MaterialButton b :
+                    new MaterialButton[]{btn_da1, btn_da2, btn_da3, btn_da4}) {
+                if (b.getText().toString().equals(correct)) {
+                    b.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+                }
+            }
+        }
+
 
         //Hàm hiện hộp thoại xác nhận thoát
         private void showExitDialog() {

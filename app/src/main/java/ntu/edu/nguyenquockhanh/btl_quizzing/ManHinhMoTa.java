@@ -12,31 +12,34 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
 
-public class MainActivity extends AppCompatActivity {
-    MaterialButton btn_choi, btn_chonchude;
+public class ManHinhMoTa extends AppCompatActivity {
+    MaterialButton btn_back, btn_play;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_man_hinh_mo_ta);
         TimDK();
-        btn_choi.setOnClickListener(new View.OnClickListener() {
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iMH = new Intent(MainActivity.this, ManHinhMoTa.class);
-                startActivity(iMH);
+                Intent iChuyenMH = new Intent(ManHinhMoTa.this, MainActivity.class);
+                startActivity(iChuyenMH);
+                overridePendingTransition(R.anim.slide_in_from_left, android.R.anim.slide_out_right);
             }
         });
-        btn_chonchude.setOnClickListener(new View.OnClickListener() {
+        btn_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iMH = new Intent(MainActivity.this, ChonChuDe.class);
-                startActivity(iMH);
+                Intent iChuyenMH = new Intent(ManHinhMoTa.this, ManHinhChoi.class);
+                startActivity(iChuyenMH);
             }
         });
     }
     void TimDK()
     {
-        btn_choi = findViewById(R.id.btn_choi);
-        btn_chonchude = findViewById(R.id.btn_chonchude);
+        btn_back = findViewById(R.id.btn_backMoTa);
+        btn_play = findViewById(R.id.btn_playMota);
     }
+
 }

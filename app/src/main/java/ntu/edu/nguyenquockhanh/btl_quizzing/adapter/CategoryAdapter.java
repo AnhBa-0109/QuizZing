@@ -1,6 +1,7 @@
 package ntu.edu.nguyenquockhanh.btl_quizzing.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import ntu.edu.nguyenquockhanh.btl_quizzing.ManHinhMoTa;
 import ntu.edu.nguyenquockhanh.btl_quizzing.R;
 import ntu.edu.nguyenquockhanh.btl_quizzing.model.Category;
 
@@ -35,6 +37,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         );
         gradient.setCornerRadius(20f);
         holder.container.setBackground(gradient);
+
+        //click item
+        holder.itemView.setOnClickListener( v ->{
+            Intent intent = new Intent(context, ManHinhMoTa.class);
+
+            //gửi dữ liệu
+            intent.putExtra("category_id", c.getId());
+            intent.putExtra("category_name", c.getName());
+
+            context.startActivity(intent);
+        });
     }
 
     @NonNull

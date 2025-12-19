@@ -62,6 +62,7 @@
             android:textStyle="bold"
             android:text="Chúc Mừng!"
             android:includeFontPadding="false"
+            android:fontFamily="@font/plus_jakarta_sans_bold"
             android:textSize="40dp">
         </ntu.edu.nguyenquockhanh.btl_quizzing.style.GradientTextView>
         <com.google.android.material.card.MaterialCardView

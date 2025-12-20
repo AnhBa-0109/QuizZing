@@ -247,9 +247,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         insertQuestion(
                 "Bài hát nào của BTS?",
                 "Dynamite",
-                "Boy With Luv",
-                "See Tình",
-                "Em Của Ngày Hôm Qua",
+                "PSYCHO",
+                "Golden",
+                "In Love",
                 "Dynamite",
                 ""
         );

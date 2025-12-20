@@ -78,12 +78,14 @@
                 android:gravity="center"
                 android:padding="10dp">
                 <ImageView
+                    android:id="@+id/iv_stateCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:src="@drawable/ic_check">
                 </ImageView>
                 <TextView
+                    android:id="@+id/tv_caudung"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Bạn đã trả lời đúng 10/10 câu"
@@ -112,6 +114,7 @@
                     android:text="TỔNG ĐIỂM"
                     style="@style/Body"/>
                 <TextView
+                    android:id="@+id/tv_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1000"
@@ -134,6 +137,7 @@
         app:layout_constraintTop_toBottomOf="@+id/hero">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_choilai"
             style="@style/MyButtonPrimary"
             android:layout_width="350dp"
             android:layout_height="wrap_content"

@@ -5,6 +5,8 @@
     <color name="blue">#2B2BEE</color>
     <color name="blur">#1C2028</color>
     <color name="grey_black">#27272A</color>
+    <color name="red">#BE2734</color>
+    <color name="green">#27BE34</color>
 
     <color name="vpop_start">#4D265C</color>
     <color name="vpop_end">#371F4F</color>

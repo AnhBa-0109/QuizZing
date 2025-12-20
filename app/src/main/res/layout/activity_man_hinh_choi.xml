@@ -98,7 +98,7 @@
     <LinearLayout
         android:id="@+id/question"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:orientation="vertical"
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -115,6 +115,7 @@
             android:textAlignment="center">
         </TextView>
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_audio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/blur"
@@ -137,13 +138,13 @@
                 <TextView
                     android:id="@+id/state_phatnhac"
                     style="@style/Title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="180dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:gravity="center"
-                    android:text="Đang phát đoạn nhạc..."
+                    android:text="Click vào nút Play để phát nhạc..."
                     android:textSize="15dp">
                 </TextView>
                 <ImageButton

@@ -26,6 +26,7 @@
     import androidx.core.view.WindowInsetsCompat;
 
     import com.google.android.material.button.MaterialButton;
+    import com.google.android.material.card.MaterialCardView;
 
     import java.util.Collection;
     import java.util.Collections;
@@ -41,9 +42,10 @@
         ImageButton ib_playpause;
         List<Question> dsCauHoi;
         ProgressBar progressBar;
+        MaterialCardView cardAudio;
         int currentQuestion = 0;
         int score = 0;
-
+        int correctAnswer = 0;
         CountDownTimer timer;
         MediaPlayer mediaPlayer;
 
@@ -76,9 +78,12 @@
                 }
             });
 
+            //Lấy dữ liệu để biết người chơi chọn mode nào
             mode = getIntent().getIntExtra("Game_Mode", GameMode.RANDOM);
             if(mode == GameMode.BY_CATEGORY) categoryId = getIntent().getIntExtra("category_id", -1);
             db = new DatabaseHelper(this);
+
+
             db.insertDefaultCategories();
             db.insertDefaultQuestions();
 
@@ -114,6 +119,8 @@
             ib_playpause = findViewById(R.id.ib_playpause);
 
             progressBar = findViewById(R.id.progress);
+
+            cardAudio = findViewById(R.id.card_audio);
         }
 
         private void loadQuestion() {
@@ -126,7 +133,16 @@
             btn_da3.setText(q.answer3);
             btn_da4.setText(q.answer4);
 
-            tv_statePhatNhac.setText("Click nút Play để phát");
+            //Xử lý câu hỏi không có audio file thì sẽ ẩn giao diện audio
+            if(q.audioFile == null || q.audioFile.trim().isEmpty()){
+                cardAudio.setVisibility(View.GONE);
+                stopAudio();
+            }
+            else {
+                cardAudio.setVisibility(View.VISIBLE);
+                tv_statePhatNhac.setText("Click nút Play để phát");
+            }
+
         }
         private void loadQuestionsByMode() {
             if (mode == GameMode.BY_CATEGORY) {
@@ -168,6 +184,7 @@
                     dsCauHoi.get(currentQuestion).correctAnswer)) {
                 b.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                 score += 100;
+                correctAnswer++;
                 tv_diem.setText(String.valueOf(score));
             } else {
                 b.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
@@ -186,7 +203,7 @@
             }
             isPlaying = false;
             ib_playpause.setImageResource(R.drawable.ic_play);
-            tv_statePhatNhac.setText("Click nút Play để phát");
+            tv_statePhatNhac.setText("Click vào nút Play để phát nhạc...");
         }
         private void playAudio() {
             stopAudio();
@@ -202,6 +219,7 @@
             ib_playpause.setImageResource(R.drawable.ic_pause);
             tv_statePhatNhac.setText("Đang phát đoạn nhạc...");
         }
+
         private void resetAnswerUI() {
             ColorStateList defaultTint =
                     ContextCompat.getColorStateList(this, R.color.grey_black);
@@ -223,6 +241,10 @@
             if (currentQuestion >= dsCauHoi.size()) {
                 db.updateHighScoreIfNeeded(score);
                 Intent iChuyen = new Intent(ManHinhChoi.this, ManHinhKetQua.class);
+                iChuyen.putExtra("Game_Mode", mode);
+                iChuyen.putExtra("Score", score);
+                iChuyen.putExtra("Correct", correctAnswer);
+                iChuyen.putExtra("category_id", categoryId);
                 startActivity(iChuyen);
                 return;
             }

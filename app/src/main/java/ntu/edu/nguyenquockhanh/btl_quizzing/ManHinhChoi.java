@@ -2,14 +2,17 @@
 
     import android.app.Dialog;
     import android.content.Intent;
+    import android.content.res.AssetFileDescriptor;
     import android.content.res.ColorStateList;
     import android.graphics.Color;
     import android.graphics.drawable.ColorDrawable;
+    import android.media.AudioManager;
     import android.media.MediaPlayer;
     import android.os.Bundle;
     import android.os.CountDownTimer;
     import android.os.Handler;
     import android.os.Looper;
+    import android.util.Log;
     import android.view.View;
     import android.widget.Button;
     import android.widget.ImageButton;
@@ -44,11 +47,10 @@
         ProgressBar progressBar;
         MaterialCardView cardAudio;
         int currentQuestion = 0;
-        int score = 0;
+        int score;
         int correctAnswer = 0;
         CountDownTimer timer;
         MediaPlayer mediaPlayer;
-
         DatabaseHelper db;
         boolean isPlaying = false;
         int mode;
@@ -71,7 +73,7 @@
                     }
             );
             ib_playpause.setOnClickListener(v -> {
-                if (isPlaying) {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                     stopAudio();
                 } else {
                     playAudio();
@@ -102,6 +104,17 @@
 
             loadQuestion();
             startTimer();
+
+//            if(mode == GameMode.BY_CATEGORY)
+//            {
+//                categoryId = getIntent().getIntExtra("category_id", -1);
+//                Log.i("Chế độ chơi", String.valueOf(mode));
+//                Log.i("Chủ đề", String.valueOf(categoryId));
+//                Log.i("Đang ở màn hình:", "Màn hình chơi");
+//            }
+//            else {
+//                Log.i("Chế độ chơi", String.valueOf(mode));
+//            }
         }
         void TimDK() {
             btn_back = findViewById(R.id.btn_backChoi);
@@ -179,15 +192,27 @@
         View.OnClickListener answerClick = v -> {
             timer.cancel();
             Button b = (Button) v;
+            String correct = dsCauHoi.get(currentQuestion).correctAnswer;
 
-            if (b.getText().toString().equals(
-                    dsCauHoi.get(currentQuestion).correctAnswer)) {
+            if (b.getText().toString().equals(correct))
+            {
+                //đổi màu background button thành xanh lá khi chọn đáp án đúng
                 b.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                 score += 100;
                 correctAnswer++;
                 tv_diem.setText(String.valueOf(score));
             } else {
+                //đổi màu background button thành đỏ khi chọn đáp án sai
                 b.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+                if(btn_da1.getText().toString().equals(correct)){
+                    btn_da1.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+                } else if (btn_da2.getText().toString().equals(correct)) {
+                    btn_da2.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+                }
+                else if(btn_da3.getText().toString().equals(correct)){
+                    btn_da3.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+                }
+                else btn_da4.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
             }
             disableAnswerButtons();
 
@@ -205,19 +230,21 @@
             ib_playpause.setImageResource(R.drawable.ic_play);
             tv_statePhatNhac.setText("Click vào nút Play để phát nhạc...");
         }
+
         private void playAudio() {
             stopAudio();
 
             String audioName = dsCauHoi.get(currentQuestion).audioFile;
             if (audioName == null) return;
 
-            mediaPlayer = MediaPlayer.create(this,
-                    getResources().getIdentifier(audioName, "raw", getPackageName()));
+            mediaPlayer = MediaPlayer.create(this, getResources().getIdentifier(audioName, "raw", getPackageName()));
             mediaPlayer.start();
-
             isPlaying = true;
+
+
             ib_playpause.setImageResource(R.drawable.ic_pause);
             tv_statePhatNhac.setText("Đang phát đoạn nhạc...");
+            mediaPlayer.setOnCompletionListener(mp -> stopAudio());
         }
 
         private void resetAnswerUI() {

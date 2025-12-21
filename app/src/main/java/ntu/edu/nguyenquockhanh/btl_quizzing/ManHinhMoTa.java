@@ -2,6 +2,7 @@ package ntu.edu.nguyenquockhanh.btl_quizzing;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
@@ -16,12 +17,13 @@ import ntu.edu.nguyenquockhanh.btl_quizzing.model.GameMode;
 
 public class ManHinhMoTa extends AppCompatActivity {
     MaterialButton btn_back, btn_play;
+    int mode, categoryId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_man_hinh_mo_ta);
         TimDK();
-        int mode = getIntent().getIntExtra("Game_Mode", GameMode.RANDOM);
+        mode = getIntent().getIntExtra("Game_Mode", GameMode.RANDOM);
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,12 +40,22 @@ public class ManHinhMoTa extends AppCompatActivity {
                 iChuyenMH.putExtra("Game_Mode",mode);
                 if(mode == GameMode.BY_CATEGORY)
                 {
-                    int categoryId = getIntent().getIntExtra("category_id", -1);
+                    categoryId = getIntent().getIntExtra("category_id", -1);
                     iChuyenMH.putExtra("category_id", categoryId);
                 }
                 startActivity(iChuyenMH);
             }
         });
+
+//        if(mode == GameMode.BY_CATEGORY)
+//        {
+//            Log.i("Chế độ chơi", String.valueOf(mode));
+//            Log.i("Chủ đề", String.valueOf(categoryId));
+//            Log.i("Đang ở màn hình:", "Màn hình mô tả");
+//        }
+//        else {
+//            Log.i("Chế độ chơi", String.valueOf(mode));
+//        }
     }
     void TimDK()
     {

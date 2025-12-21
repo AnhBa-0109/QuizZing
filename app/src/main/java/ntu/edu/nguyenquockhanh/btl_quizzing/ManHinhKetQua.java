@@ -10,6 +10,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ public class ManHinhKetQua extends AppCompatActivity {
         score = getIntent().getIntExtra("Score", 0);
         caudung = getIntent().getIntExtra("Correct", 0);
 
+
         btn_choilai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,6 +50,7 @@ public class ManHinhKetQua extends AppCompatActivity {
                 IChuyenMH.putExtra("Game_Mode", mode);
                 //kiểm tra nếu mode là chơi theo chủ đề thì khi bấm chơi lại sẽ load câu hỏi theo chủ đề đó
                 if(mode == GameMode.BY_CATEGORY){
+                    categoryId = getIntent().getIntExtra("category_id", -1);
                     IChuyenMH.putExtra("category_id", categoryId);
                 }
                 startActivity(IChuyenMH);
@@ -73,6 +76,17 @@ public class ManHinhKetQua extends AppCompatActivity {
 
         tv_score.setText(String.valueOf(score));
         setStringCorrectAnswer(caudung);
+
+//        if(mode == GameMode.BY_CATEGORY)
+//        {
+//            categoryId = getIntent().getIntExtra("category_id", -1);
+//            Log.i("Chế độ chơi", String.valueOf(mode));
+//            Log.i("Chủ đề", String.valueOf(categoryId));
+//            Log.i("Đang ở màn hình:", "Màn hình kết quả");
+//        }
+//        else {
+//            Log.i("Chế độ chơi", String.valueOf(mode));
+//        }
     }
     void TimDK()
     {
